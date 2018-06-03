@@ -12,7 +12,9 @@ void libera_Fila(fi);
 
 //-----------------------------------------------------
 typedef struct lista {
-  float info;
+  int id;
+  char tipo;
+  int combustivel;
   struct lista* prox;
 } Lista;
 
@@ -23,7 +25,12 @@ typedef struct fila {
 
 int main(int argc, char const *argv[]) {
 
-  //printf("Aeroporto Internacional de Brasília\n", );
+  // printf("Aeroporto Internacional de Brasília\n", );
+  // printf("Hora inicial: %d\n", ??,);
+  // printf("Fila de Pedidos: %s\n", ??,);
+  // printf("Número de Voos: %d\n",??,);
+  // printf("Número de aproximações: %d\n",??,);
+  // printf("Número de Decolagens: %d\n",??,);
 
   return 0;
 }
