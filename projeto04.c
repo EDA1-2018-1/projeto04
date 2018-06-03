@@ -57,6 +57,15 @@ int main(int argc, char const *argv[]) {
   // printf("Número de aproximações: %d\n",??,);
   // printf("Número de Decolagens: %d\n",??,);
 
+
+	int nVoos,nAprox,nDecol,combustA;
+	Lista *l;
+
+	nAproximacoes=numeroDecolagem();
+	nDecolagens=numeroDecolagem();
+
+	nVoos = nAprox + nDecol;
+
   return 0;
 }
 
