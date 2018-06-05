@@ -43,9 +43,11 @@ Lista *busca(Fila *f);
 void fila_insere_inicio (Fila*);
 void fila_insere_fim (Fila* f, int n, int *auxDeco,int *auxAprox,int nAproximacoes,int nDecolagens);
 void mostrar_tela (Fila* f);
+void verificarTempo(Fila*, int);
+void imprime(Fila*);
 void combustivel (Fila *f,int n);
 void emergencia(Fila* f, int id, char tipo, int combustivel);
-void casos (Fila* f, int nVoos, int *tempo, char cod[64][6]);
+void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]);
 
 Aviao fila_retira_inicio (Fila*);
 Aviao fila_retira_fim (Fila*);
@@ -94,15 +96,15 @@ for(aux = 0; aux < nVoos; aux++){
 	fila_insere_fim(f,aux+1,&auxDeco,&auxAprox,nAproximacoes,nDecolagens);
 }
 
-printf("-----------------------------------------------------\n");
-puts("Aeroporto Internacional de Brasília");
-puts("Hora Inicial: 13:00");
-puts("Fila de Pedidos:[código do voo – P/D – 	prioridade]");
-printf("Numero de Voos: %d\n",nVoos);
-printf("Numero de Aproximacoes: %d\n",nAproximacoes);
-printf("Numero de Decolagens: %d\n",nDecolagens);
-printf("-----------------------------------------------------\n");
-casos(f,nVoos,&tempo,codVoos);
+printf("===========================================================\n");
+puts("||Aeroporto Internacional de Brasília                    ||");
+puts("||Hora Inicial: 10:00                                    ||");
+puts("||Fila de Pedidos:[código do voo – P/D –prioridade]      ||");
+printf("||Numero de Voos: %d                                     ||\n",nVoos);
+printf("||Numero de Aproximacoes: %d                             ||\n",nAproximacoes);
+printf("||Numero de Decolagens: %d                               ||\n",nDecolagens);
+printf("===========================================================\n");
+evento(f,nVoos,&tempo,codVoos);
 free(f);
 printf("%d %d\n",auxDeco,auxAprox);
 return 0;
@@ -313,7 +315,7 @@ int busca_todos(Fila *f){
 //-------------------------------------------------------
 //-------------------------------------------------------
 
-void casos (Fila* f, int nVoos, int *tempo, char cod[64][6]){
+void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]){
 	int pistasEmUso[3] = {0,0,0};
 	int tempoPistas[3] = {0,0,0};
 	int pistaAtual, contadorDaMorte = 0;
@@ -330,104 +332,112 @@ void casos (Fila* f, int nVoos, int *tempo, char cod[64][6]){
 			for(int j = 0; j < 6; j++){
 				codigo[j] = cod[i][j];
 			}
-			printf("Código do Voo: %s\n",codigo);
+			printf("Código do Voo: %s / %d\n",codigo,f->ini->aviao.id);
 			printf("Status: ALERTA CRÍTICO, AERONAVE IRÁ CAIR\n\n");
 			fila_retira_inicio(f);
 		}
 		else {
-			if(tempoPistas[0] == 0){
-				pistaAtual = 1;
-				pistasEmUso[0] = 1;
-			}else if(tempoPistas[1] == 0){
-				pistaAtual = 2;
-				pistasEmUso[1] = 1;
-			}else if((tempoPistas[2] == 0 && f->ini->aviao.tipo == 'D') || (tempoPistas[2] == 0  && f->ini->aviao.tipo == 'A' && f->ini->aviao.combustivel == 0)){
-				pistaAtual = 3;
-				pistasEmUso[2] = 1;
-			}else {
+  			if(tempoPistas[0] == 0){
+				printf("\n");
+ 				imprime(f);
+ 				printf("\n");
+  				pistaAtual = 1;
+  				pistasEmUso[0] = 1;
+  			}else if(tempoPistas[1] == 0){
+				printf("\n");
+ 				imprime(f);
+ 				printf("\n");
+  				pistaAtual = 2;
+  				pistasEmUso[1] = 1;
+  			}else if((tempoPistas[2] == 0 && f->ini->aviao.tipo == 'D') || (tempoPistas[2] == 0  && f->ini->aviao.tipo == 'A' && f->ini->aviao.combustivel == 0)){
+				printf("\n");
+ 				imprime(f);
+ 				printf("\n");
+  				pistaAtual = 3;
+  				pistasEmUso[2] = 1;
+  			}else {
 				if(tempoPistas[0] <= tempoPistas[1] && tempoPistas[0] <= tempoPistas[2] ){
-					if(tempoPistas[0] == 10)
-						combustivel(f,1);
-					else if(tempoPistas[0] == 20)
-						combustivel(f,2);
+					verificarTempo(f,*tempo);
 					*tempo =relogio(*tempo,tempoPistas[0]);
 					tempoPistas[1] -= tempoPistas[0];
 					tempoPistas[2] -= tempoPistas[0];
 					tempoPistas[0] = 0;
 					pistaAtual = 1;
+					printf("\n");
+					imprime(f);
+ 					printf("\n");
 				}else if(tempoPistas[1] <= tempoPistas[0] && tempoPistas[1] <= tempoPistas[2]){
-					if(tempoPistas[1] == 10)
-						combustivel(f,1);
-					else if(tempoPistas[1] == 20)
-						combustivel(f,2);
-					*tempo =relogio(*tempo,tempoPistas[1]);
-					tempoPistas[0] -= tempoPistas[1];
-					tempoPistas[2] -= tempoPistas[1];
-					tempoPistas[1] = 0;
-					pistaAtual = 2;
+					verificarTempo(f,*tempo);
+  					*tempo =relogio(*tempo,tempoPistas[1]);
+  					tempoPistas[0] -= tempoPistas[1];
+  					tempoPistas[2] -= tempoPistas[1];
+  					tempoPistas[1] = 0;
+  					pistaAtual = 2;
+					printf("\n");
+ 					imprime(f);
+ 					printf("\n");
 				}else if((tempoPistas[2] <= tempoPistas[0] && tempoPistas[2] <= tempoPistas[1] && f->ini->aviao.tipo == 'D') ){
-					if(tempoPistas[2] == 10)
-						combustivel(f,1);
-					else if(tempoPistas[2] == 20)
-						combustivel(f,2);
-					*tempo =relogio(*tempo,tempoPistas[2]);
-
-					tempoPistas[0] -= tempoPistas[2];
-					tempoPistas[1] -= tempoPistas[2];
-					tempoPistas[2] = 0;
-					pistaAtual = 3;
+					verificarTempo(f,*tempo);
+  					tempoPistas[0] -= tempoPistas[2];
+  					tempoPistas[1] -= tempoPistas[2];
+  					tempoPistas[2] = 0;
+  					pistaAtual = 3;
+					printf("\n");
+					imprime(f);
+ 					printf("\n");
 				}else {
 					if(tempoPistas[0] <= tempoPistas[1]){
-						if(tempoPistas[0] == 10)
-							combustivel(f,1);
-						else if(tempoPistas[0] == 20)
-							combustivel(f,2);
-						*tempo =relogio(*tempo,tempoPistas[0]);
-						tempoPistas[1] -= tempoPistas[0];
-						tempoPistas[0] = 0;
-						pistaAtual = 1;
+						verificarTempo(f,*tempo);
+  						*tempo =relogio(*tempo,tempoPistas[0]);
+  						tempoPistas[1] -= tempoPistas[0];
+  						tempoPistas[0] = 0;
+  						pistaAtual = 1;
+ 						printf("\n");
+						imprime(f);
+						printf("\n");
 					}else {
-						if(tempoPistas[1] == 10)
-							combustivel(f,1);
-						else if(tempoPistas[1] == 20)
-							combustivel(f,2);
-						*tempo =relogio(*tempo,tempoPistas[1]);
-						tempoPistas[0] -= tempoPistas[1];
-						tempoPistas[1] = 0;
-						pistaAtual = 2;
+						verificarTempo(f,*tempo);
+  						*tempo =relogio(*tempo,tempoPistas[1]);
+  						tempoPistas[0] -= tempoPistas[1];
+  						tempoPistas[1] = 0;
+  						pistaAtual = 2;
+ 						printf("\n");
+						imprime(f);
+						printf("\n");
 					}
 				}
 			}
+			printf("tempo1 = %d, tempo 2 = %d, tempo 3 = %d\n",tempoPistas[0],tempoPistas[1],tempoPistas[2]);
 			if(f->ini->aviao.combustivel < 0 && f->ini->aviao.tipo == 'A'){
 				for(int j = 0; j < 6; j++){
 					codigo[j] = cod[i][j];
 				}
-				printf("Código do Voo: %s\n",codigo);
+				printf("Código do Voo: %s / %d\n",codigo,f->ini->aviao.id);
 				printf("Status: ALERTA CRÍTICO, AERONAVE IRÁ CAIR\n\n");
 				fila_retira_inicio(f);
 			}else {
 				for(int j = 0; j < 6; j++){
 					codigo[j] = cod[i][j];
 				}
-				printf("Código do Voo: %s\n",codigo);
+				printf("Código do Voo: %s / %d\n",codigo,f->ini->aviao.id);
 				if(f->ini->aviao.tipo == 'A'){
 					printf("Status: Aeronave Pousou\n");
 					if(pistaAtual == 1){
-						tempoPistas[0] += 20;
+						tempoPistas[0] += 4*UnTempo;
 					}else if(pistaAtual == 2){
-						tempoPistas[1] += 20;
+						tempoPistas[1] += 4*UnTempo;
 					}else if(pistaAtual == 3){
-						tempoPistas[2] += 20;
+						tempoPistas[2] += 4*UnTempo;
 					}
 				}
 				else{
 					printf("Status: Aeronave Decolou\n");
 					if(pistaAtual == 1){
-						tempoPistas[0] += 10;
+						tempoPistas[0] += 2*UnTempo;
 					}else if(pistaAtual == 2){
-						tempoPistas[1] += 10;
+						tempoPistas[1] += 2*UnTempo;
 					}else if(pistaAtual == 3){
-						tempoPistas[2] += 10;
+						tempoPistas[2] += 2*UnTempo;
 					}
 				}
 				strcpy(strTempo,"");
@@ -435,6 +445,7 @@ void casos (Fila* f, int nVoos, int *tempo, char cod[64][6]){
 
 
 				printf("Horário do início do procedimento: %c%c:%c%c\n",strTempo[0],strTempo[1],strTempo[2],strTempo[3]);
+				printf("tempo1 = %d, tempo 2 = %d, tempo 3 = %d\n",tempoPistas[0],tempoPistas[1],tempoPistas[2]);
 				printf("Pista: %d\n\n\n",pistaAtual);
 
 				fila_retira_inicio(f);
@@ -480,4 +491,25 @@ int relogio(int t,int n){
 	}
 	return resultado;
 }
+//-------------------------------------------------------
+void imprime (Fila* f)
+{
+   Lista* q;
+   for (q=f->ini; q!=NULL; q=q->prox)
+      printf("[%d %c %d] ",q->aviao.id,q->aviao.tipo,q->aviao.combustivel);
+}
+//-------------------------------------------------------
+void verificarTempo(Fila *f, int tempo){
+   if(tempo >= 1050 && tempo < 1140){
+ 		combustivel(f,1);
+ 	}else if(tempo >= 1140 && tempo < 1230){
+ 		combustivel(f,1);
+ 	}else if(tempo >= 1230 && tempo < 1320){
+ 		combustivel(f,1);
+ 	}else if(tempo >= 1320 && tempo < 1410){
+ 		combustivel(f,1);
+ 	}else if(tempo >= 1410 && tempo < 1500){
+ 		combustivel(f,1);
+ 	}
+ }
 //-------------------------------------------------------
