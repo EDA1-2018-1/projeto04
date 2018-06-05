@@ -41,7 +41,7 @@ Lista *retira_fim (Lista*);
 Lista *busca(Fila *f);
 
 void fila_insere_inicio (Fila*);
-void fila_insere_fim (Fila*);
+void fila_insere_fim (Fila* f, int n, int *auxDeco,int *auxAprox,int nAproximacoes,int nDecolagens);
 void mostrar_tela (Fila* f);
 void combustivel (Fila *f,int n);
 void emergencia(Fila* f, int id, char tipo, int combustivel);
@@ -84,7 +84,7 @@ Lista *l;
 Fila *f,*auxiliar;
 srand(time(NULL));
 
-f = cria();
+f = cria_fila();
 nAproximacoes=numeroDecolagem();
 nDecolagens=numeroDecolagem();
 
@@ -272,7 +272,7 @@ void combustivel(Fila *f,int n){
 	int combInicial=0;
 	for(q=f->ini; q!=NULL; q=q->prox)
 		q->aviao.combustivel-=1*n;
-		combInicial = busca_total(f);
+		combInicial = busca_todos(f);
 		for(int aux = 0; aux < combInicial; aux++){
 			f = retira(f);
 		}
@@ -331,7 +331,7 @@ void casos (Fila* f, int nVoos, int *tempo, char cod[64][6]){
 				codigo[j] = cod[i][j];
 			}
 			printf("Código do Voo: %s\n",codigo);
-			printf("Status: explodiu\n\n");
+			printf("Status: ALERTA CRÍTICO, AERONAVE IRÁ CAIR\n\n");
 			fila_retira_inicio(f);
 		}
 		else {
@@ -403,7 +403,7 @@ void casos (Fila* f, int nVoos, int *tempo, char cod[64][6]){
 					codigo[j] = cod[i][j];
 				}
 				printf("Código do Voo: %s\n",codigo);
-				printf("Status: explodiu\n\n");
+				printf("Status: ALERTA CRÍTICO, AERONAVE IRÁ CAIR\n\n");
 				fila_retira_inicio(f);
 			}else {
 				for(int j = 0; j < 6; j++){
