@@ -1,4 +1,9 @@
 
+/*
+    Érico Bandeira - 16/0070287
+    Luciana Ribeiro Lins de Albuquerque - 15/0016131
+    Max Henrique Barbosa - 16/0047013
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +12,25 @@
 #include <time.h>
 
 #define UnTempo 5
+
+//-----------------------------------------------------
+/*STRUCTS*/
+typedef struct aviao {
+  int id;
+  char tipo;
+  int combustivel;
+} Aviao;
+
+typedef struct lista {
+  Aviao aviao;
+  struct lista* ant;
+  struct lista* prox;
+} Lista;
+
+typedef struct fila {
+  Lista* ini;
+  Lista* fim;
+} Fila;
 
 //-----------------------------------------------------
 /* Declarção de Funções*/
@@ -37,22 +61,7 @@ int busca_todos(Fila *f);
 int relogio(int t,int n);
 
 //-----------------------------------------------------
-typedef struct aviao {
-  int id;
-  char tipo;
-  int combustivel;
-} Aviao;
-
-typedef struct lista {
-  Aviao aviao;
-  struct lista* ant;
-  struct lista* prox;
-} Lista;
-
-typedef struct fila {
-  Lista* ini;
-  Lista* fim;
-} Fila;
+/*Nossa querida Main*/
 
 int main(int argc, char const *argv[]) {
 
@@ -132,7 +141,7 @@ char geraVoo(int *auxDeco,int *auxAprox,int nAproximacoes,int nDecolagens){ //PR
 	}
 }
 //-------------------------------------------------------
-Lista *insere_inicio (Lista* ini, Aviao *i) { //Auxiliar
+Lista *insere_inicio (Lista* ini, Aviao *i) { //Aux
    Lista* novo = (Lista*) malloc(sizeof(Lista));
    novo->aviao = *i;
    novo->prox = ini;
@@ -143,7 +152,7 @@ Lista *insere_inicio (Lista* ini, Aviao *i) { //Auxiliar
    return novo;
 }
 //--------------------------------------------------------
-Lista *insere_fim (Lista* fim, Aviao *i) { //Auxiliar
+Lista *insere_fim (Lista* fim, Aviao *i) { //Aux
    Lista* novo = (Lista*) malloc(sizeof(Lista));
    novo->aviao = *i;
    novo->prox = NULL;
@@ -154,7 +163,7 @@ Lista *insere_fim (Lista* fim, Aviao *i) { //Auxiliar
    return novo;
 }
 //--------------------------------------------------------
-Lista *retira_inicio (Lista* ini) { //Auxiliar
+Lista *retira_inicio (Lista* ini) { //Aux
    Lista* p = ini->prox;
    if (p != NULL){
      p->ant = NULL;
@@ -163,7 +172,7 @@ Lista *retira_inicio (Lista* ini) { //Auxiliar
    return p;
 }
 //--------------------------------------------------------
-Lista *retira_fim (Lista* fim) { //Auxiliar
+Lista *retira_fim (Lista* fim) { //Aux
    Lista* p = fim->ant;
    if (p != NULL){
      p->prox = NULL;
@@ -186,7 +195,7 @@ void fila_insere_inicio (Fila* f) {
    }
 }
 //-------------------------------------------------------
-void fila_insere_fim (Fila* f) {
+void fila_insere_fim (Fila* f, int n, int *auxDeco,int *auxAprox,int nAproximacoes,int nDecolagens) {
 	 Aviao *i = (Aviao*)calloc(1,sizeof(Aviao));
 
    i->id = n;
