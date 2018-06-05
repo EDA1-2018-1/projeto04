@@ -44,7 +44,6 @@ void fila_insere_inicio (Fila*);
 void fila_insere_fim (Fila* f, int n, int *auxDeco,int *auxAprox,int nAproximacoes,int nDecolagens);
 void mostrar_tela (Fila* f);
 void verificarTempo(Fila*, int);
-void imprime(Fila*);
 void combustivel (Fila *f,int n);
 void emergencia(Fila* f, int id, char tipo, int combustivel);
 void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]);
@@ -68,15 +67,15 @@ int relogio(int t,int n);
 int main(int argc, char const *argv[]) {
 
   char codVoos[64][6] =  {"VG3001", "JJ4404", "LN7001", "TG1501", "GL7602", "TT1010", "AZ1009",
-													"AZ1008", "AZ1010", "TG1506", "VG3002", "JJ4402", "GL7603", "RL7880",
-													"AL0012", "TT4544", "TG1505", "VG3003", "JJ4403", "JJ4401", "LN7002",
-													"AZ1002", "AZ1007", "GL7604", "AZ1006", "TG1503", "AZ1003", "JJ4403",
-													"AZ1001", "LN7003", "AZ1004", "TG1504", "AZ1005", "TG1502", "GL7601",
-													"TT4500", "RL7801", "JJ4410", "GL7607", "AL0029", "VV3390", "VV3392",
-													"GF4681", "GF4690", "AZ1020", "JJ4435", "VG3010", "LF0920", "AZ1065",
-													"LF0978", "RL7867", "TT4502", "GL7645", "LF0932", "JJ4434", "TG1510",
-													"TT1020", "AZ1098", "BA2312", "VG3030", "BA2304", "KL5609", "KL5610",
-													"KL5611"};
+							"AZ1008", "AZ1010", "TG1506", "VG3002", "JJ4402", "GL7603", "RL7880",
+							"AL0012", "TT4544", "TG1505", "VG3003", "JJ4403", "JJ4401", "LN7002",
+							"AZ1002", "AZ1007", "GL7604", "AZ1006", "TG1503", "AZ1003", "JJ4403",
+							"AZ1001", "LN7003", "AZ1004", "TG1504", "AZ1005", "TG1502", "GL7601",
+							"TT4500", "RL7801", "JJ4410", "GL7607", "AL0029", "VV3390", "VV3392",
+							"GF4681", "GF4690", "AZ1020", "JJ4435", "VG3010", "LF0920", "AZ1065",
+							"LF0978", "RL7867", "TT4502", "GL7645", "LF0932", "JJ4434", "TG1510",
+							"TT1020", "AZ1098", "BA2312", "VG3030", "BA2304", "KL5609", "KL5610",
+							"KL5611"};
 
 int nVoos,nAproximacoes,nDecolagens,combA,aux,tempo = 1000;
 int auxAprox=0;
@@ -339,19 +338,16 @@ void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]){
 		else {
   			if(tempoPistas[0] == 0){
 				printf("\n");
- 				imprime(f);
  				printf("\n");
   				pistaAtual = 1;
   				pistasEmUso[0] = 1;
   			}else if(tempoPistas[1] == 0){
 				printf("\n");
- 				imprime(f);
  				printf("\n");
   				pistaAtual = 2;
   				pistasEmUso[1] = 1;
   			}else if((tempoPistas[2] == 0 && f->ini->aviao.tipo == 'D') || (tempoPistas[2] == 0  && f->ini->aviao.tipo == 'A' && f->ini->aviao.combustivel == 0)){
 				printf("\n");
- 				imprime(f);
  				printf("\n");
   				pistaAtual = 3;
   				pistasEmUso[2] = 1;
@@ -364,7 +360,6 @@ void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]){
 					tempoPistas[0] = 0;
 					pistaAtual = 1;
 					printf("\n");
-					imprime(f);
  					printf("\n");
 				}else if(tempoPistas[1] <= tempoPistas[0] && tempoPistas[1] <= tempoPistas[2]){
 					verificarTempo(f,*tempo);
@@ -374,7 +369,6 @@ void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]){
   					tempoPistas[1] = 0;
   					pistaAtual = 2;
 					printf("\n");
- 					imprime(f);
  					printf("\n");
 				}else if((tempoPistas[2] <= tempoPistas[0] && tempoPistas[2] <= tempoPistas[1] && f->ini->aviao.tipo == 'D') ){
 					verificarTempo(f,*tempo);
@@ -383,7 +377,6 @@ void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]){
   					tempoPistas[2] = 0;
   					pistaAtual = 3;
 					printf("\n");
-					imprime(f);
  					printf("\n");
 				}else {
 					if(tempoPistas[0] <= tempoPistas[1]){
@@ -393,7 +386,6 @@ void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]){
   						tempoPistas[0] = 0;
   						pistaAtual = 1;
  						printf("\n");
-						imprime(f);
 						printf("\n");
 					}else {
 						verificarTempo(f,*tempo);
@@ -402,12 +394,10 @@ void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]){
   						tempoPistas[1] = 0;
   						pistaAtual = 2;
  						printf("\n");
-						imprime(f);
 						printf("\n");
 					}
 				}
 			}
-			printf("tempo1 = %d, tempo 2 = %d, tempo 3 = %d\n",tempoPistas[0],tempoPistas[1],tempoPistas[2]);
 			if(f->ini->aviao.combustivel < 0 && f->ini->aviao.tipo == 'A'){
 				for(int j = 0; j < 6; j++){
 					codigo[j] = cod[i][j];
@@ -445,7 +435,6 @@ void evento (Fila* f, int nVoos, int *tempo, char cod[64][6]){
 
 
 				printf("Horário do início do procedimento: %c%c:%c%c\n",strTempo[0],strTempo[1],strTempo[2],strTempo[3]);
-				printf("tempo1 = %d, tempo 2 = %d, tempo 3 = %d\n",tempoPistas[0],tempoPistas[1],tempoPistas[2]);
 				printf("Pista: %d\n\n\n",pistaAtual);
 
 				fila_retira_inicio(f);
@@ -491,14 +480,9 @@ int relogio(int t,int n){
 	}
 	return resultado;
 }
+
 //-------------------------------------------------------
-void imprime (Fila* f)
-{
-   Lista* q;
-   for (q=f->ini; q!=NULL; q=q->prox)
-      printf("[%d %c %d] ",q->aviao.id,q->aviao.tipo,q->aviao.combustivel);
-}
-//-------------------------------------------------------
+
 void verificarTempo(Fila *f, int tempo){
    if(tempo >= 1050 && tempo < 1140){
  		combustivel(f,1);
